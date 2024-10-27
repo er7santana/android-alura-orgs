@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/nome"
+        android:id="@+id/produto_item_nome"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -18,24 +18,24 @@
         />
 
     <TextView
-        android:id="@+id/descricao"
+        android:id="@+id/produto_item_descricao"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         tools:text="Laranja, manga e uva"
-        app:layout_constraintTop_toBottomOf="@id/nome"
-        app:layout_constraintStart_toStartOf="@id/nome"
-        app:layout_constraintEnd_toEndOf="@id/nome"
+        app:layout_constraintTop_toBottomOf="@id/produto_item_nome"
+        app:layout_constraintStart_toStartOf="@id/produto_item_nome"
+        app:layout_constraintEnd_toEndOf="@id/produto_item_nome"
         android:layout_marginTop="8dp"
         />
 
     <TextView
-        android:id="@+id/valor"
+        android:id="@+id/produto_item_valor"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         tools:text="19,99"
-        app:layout_constraintStart_toStartOf="@id/nome"
-        app:layout_constraintEnd_toEndOf="@id/nome"
-        app:layout_constraintTop_toBottomOf="@id/descricao"
+        app:layout_constraintStart_toStartOf="@id/produto_item_nome"
+        app:layout_constraintEnd_toEndOf="@id/produto_item_nome"
+        app:layout_constraintTop_toBottomOf="@id/produto_item_descricao"
         android:layout_marginTop="8dp"
         />
 
