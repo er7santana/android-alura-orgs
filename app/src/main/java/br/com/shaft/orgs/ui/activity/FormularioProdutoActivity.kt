@@ -2,54 +2,53 @@ package br.com.shaft.orgs.ui.activity
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import br.com.shaft.orgs.R
 import br.com.shaft.orgs.dao.ProdutosDao
 import br.com.shaft.orgs.model.Produto
 import java.math.BigDecimal
 
 class FormularioProdutoActivity : AppCompatActivity(R.layout.activity_formulario_produto) {
+
+    private val dao = ProdutosDao()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
 
+        configuraBotaoSalvar()
+    }
 
-
+    private fun configuraBotaoSalvar() {
         val botaoSalvar = findViewById<Button>(R.id.botao_salvar)
+
         botaoSalvar.setOnClickListener {
-            val campoNome = findViewById<EditText>(R.id.nome)
-            val nome = campoNome.text.toString()
-
-            val campoDescricao = findViewById<EditText>(R.id.descricao)
-            val descricao = campoDescricao.text.toString()
-
-            var campoValor = findViewById<EditText>(R.id.valor)
-            val valorEmTexto = campoValor.text.toString()
-            val valor = if(valorEmTexto.isBlank()) {
-                BigDecimal.ZERO
-            } else {
-                BigDecimal(valorEmTexto)
-            }
-
-            val produtoNovo = Produto(
-                nome = nome,
-                descricao = descricao,
-                valor = valor
-            )
-
-            Log.i("FormularioProduto", "onCreate: $produtoNovo")
-            val dao = ProdutosDao()
+            val produtoNovo = criaProduto()
             dao.adiciona(produtoNovo)
-            val produtos = dao.buscaTodos()
-            Log.i("FormularioProdutos", "listaProdutos: $produtos")
-
             finish()
         }
+    }
+
+    private fun criaProduto(): Produto {
+        val campoNome = findViewById<EditText>(R.id.nome)
+        val nome = campoNome.text.toString()
+
+        val campoDescricao = findViewById<EditText>(R.id.descricao)
+        val descricao = campoDescricao.text.toString()
+
+        var campoValor = findViewById<EditText>(R.id.valor)
+        val valorEmTexto = campoValor.text.toString()
+        val valor = if (valorEmTexto.isBlank()) {
+            BigDecimal.ZERO
+        } else {
+            BigDecimal(valorEmTexto)
+        }
+
+        return Produto(
+            nome = nome,
+            descricao = descricao,
+            valor = valor
+        )
     }
 }
