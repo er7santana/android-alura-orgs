@@ -11,7 +11,9 @@ import java.math.BigDecimal
 
 class FormularioProdutoActivity : AppCompatActivity(R.layout.activity_formulario_produto) {
 
-    private val dao = ProdutosDao()
+    private val dao by lazy {
+        ProdutosDao()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
