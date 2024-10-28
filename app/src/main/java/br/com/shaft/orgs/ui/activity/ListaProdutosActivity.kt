@@ -13,6 +13,9 @@ import br.com.shaft.orgs.dao.ProdutosDao
 import br.com.shaft.orgs.databinding.ActivityListaProdutosBinding
 import br.com.shaft.orgs.databinding.ProdutoItemBinding
 import br.com.shaft.orgs.model.Produto
+import java.math.BigDecimal
+import java.text.NumberFormat
+import java.util.Locale
 
 class ListaProdutosActivity: AppCompatActivity(R.layout.activity_lista_produtos) {
 
@@ -74,7 +77,13 @@ class ListaProdutosActivity: AppCompatActivity(R.layout.activity_lista_produtos)
             fun vincula(produto: Produto) {
                 nome.text = produto.nome
                 descricao.text = produto.descricao
-                valor.text = produto.valor.toPlainString()
+                valor.text = formataParaMoedaBrasileira(produto.valor)
+            }
+
+            private fun formataParaMoedaBrasileira(valor: BigDecimal): String? {
+                val formatador = NumberFormat.getCurrencyInstance(Locale("pt", "br"))
+                val valorEmMoeda = formatador.format(valor)
+                return valorEmMoeda
             }
         }
 
