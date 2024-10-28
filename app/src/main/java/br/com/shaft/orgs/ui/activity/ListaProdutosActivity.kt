@@ -13,10 +13,12 @@ import br.com.shaft.orgs.R
 import br.com.shaft.orgs.dao.ProdutosDao
 import br.com.shaft.orgs.databinding.ActivityListaProdutosBinding
 import br.com.shaft.orgs.databinding.ProdutoItemBinding
+import br.com.shaft.orgs.extensions.tentaCarregarImagem
 import br.com.shaft.orgs.model.Produto
 import coil3.load
 import coil3.request.error
 import coil3.request.fallback
+import coil3.request.placeholder
 import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.Locale
@@ -84,10 +86,7 @@ class ListaProdutosActivity: AppCompatActivity(R.layout.activity_lista_produtos)
                 descricao.text = produto.descricao
                 valor.text = formataParaMoedaBrasileira(produto.valor)
 
-                imageView.load(produto.imagem) {
-                    error(R.drawable.erro)
-                    fallback(R.drawable.imagem_padrao)
-                }
+                imageView.tentaCarregarImagem(produto.imagem)
             }
 
             private fun formataParaMoedaBrasileira(valor: BigDecimal): String? {
