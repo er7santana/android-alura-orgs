@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import br.com.shaft.orgs.R
 import br.com.shaft.orgs.dao.ProdutosDao
 import br.com.shaft.orgs.databinding.ActivityFormularioProdutoBinding
+import br.com.shaft.orgs.databinding.FormularioImagemBinding
 import br.com.shaft.orgs.model.Produto
+import coil3.load
 import java.math.BigDecimal
 
 class FormularioProdutoActivity : AppCompatActivity(R.layout.activity_formulario_produto) {
@@ -14,6 +16,8 @@ class FormularioProdutoActivity : AppCompatActivity(R.layout.activity_formulario
     private val binding by lazy {
         ActivityFormularioProdutoBinding.inflate(layoutInflater)
     }
+
+    private var url: String? = null
 
     private val dao by lazy {
         ProdutosDao()
@@ -26,10 +30,17 @@ class FormularioProdutoActivity : AppCompatActivity(R.layout.activity_formulario
         configuraBotaoSalvar()
         binding.formularioProdutoImagem.setOnClickListener {
 
+            val bindingFormularioImagem = FormularioImagemBinding.inflate(layoutInflater)
+            bindingFormularioImagem.formularioImagemBotaoCarregar.setOnClickListener {
+                val url = bindingFormularioImagem.formluarioImagemUrl.text.toString()
+                bindingFormularioImagem.formularioImagemImageView.load(url)
+            }
+
             AlertDialog.Builder(this)
-                .setView(R.layout.formulario_imagem)
+                .setView(bindingFormularioImagem.root)
                 .setPositiveButton("Confirmar", { _, _ ->
-                    println("did tap on confirmar")
+                    url = bindingFormularioImagem.formluarioImagemUrl.text.toString()
+                    binding.formularioProdutoImagem.load(url)
                 })
                 .setNegativeButton("Cancelar", { _, _ ->
                     println("did tap on cancelar")
@@ -66,7 +77,8 @@ class FormularioProdutoActivity : AppCompatActivity(R.layout.activity_formulario
         return Produto(
             nome = nome,
             descricao = descricao,
-            valor = valor
+            valor = valor,
+            imagem = url
         )
     }
 }
