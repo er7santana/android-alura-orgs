@@ -3,22 +3,20 @@ package br.com.shaft.orgs.ui.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.com.shaft.orgs.R
 import br.com.shaft.orgs.dao.ProdutosDao
 import br.com.shaft.orgs.databinding.ActivityListaProdutosBinding
 import br.com.shaft.orgs.databinding.ProdutoItemBinding
+import br.com.shaft.orgs.extensions.formataParaMoedaBrasileira
 import br.com.shaft.orgs.extensions.tentaCarregarImagem
 import br.com.shaft.orgs.model.Produto
-import coil3.load
-import coil3.request.error
-import coil3.request.fallback
-import coil3.request.placeholder
 import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.Locale
@@ -33,9 +31,9 @@ class ListaProdutosActivity: AppCompatActivity(R.layout.activity_lista_produtos)
         ProdutosDao()
     }
 
-    private val adapter by lazy {
+    private val adapter =
         ListaProdutosAdapter(this, produtos = dao.buscaTodos())
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +51,9 @@ class ListaProdutosActivity: AppCompatActivity(R.layout.activity_lista_produtos)
         val recyclerView = binding.listaProdutosRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
+        adapter.quandoClicaNoItemListener = { produto ->
+            vaiParaDetalhesProduto(produto)
+        }
     }
 
     private fun configuraFab() {
@@ -67,14 +68,32 @@ class ListaProdutosActivity: AppCompatActivity(R.layout.activity_lista_produtos)
         startActivity(intent)
     }
 
+    private fun vaiParaDetalhesProduto(produto: Produto) {
+        val intent = Intent(this, DetalhesProdutoActivity::class.java).apply {
+            putExtra("produto", produto)
+        }
+        startActivity(intent)
+    }
+
     class ListaProdutosAdapter(
         private val context: Context,
-        produtos: List<Produto> = listOf()
+        produtos: List<Produto> = listOf(),
+        var quandoClicaNoItemListener: (produto: Produto) -> Unit = {}
     ) : RecyclerView.Adapter<ListaProdutosAdapter.ViewHolder>() {
 
         private val produtos = produtos.toMutableList()
 
-        class ViewHolder(binding: ProdutoItemBinding): RecyclerView.ViewHolder(binding.root) {
+        inner class ViewHolder(binding: ProdutoItemBinding): RecyclerView.ViewHolder(binding.root) {
+
+            private lateinit var produto: Produto
+
+            init {
+                itemView.setOnClickListener {
+                    if(::produto.isInitialized) {
+                        quandoClicaNoItemListener(produto)
+                    }
+                }
+            }
 
             private val nome = binding.produtoItemNome
             private val descricao = binding.produtoItemDescricao
@@ -82,18 +101,15 @@ class ListaProdutosActivity: AppCompatActivity(R.layout.activity_lista_produtos)
             private val imageView = binding.produtoItemImagem
 
             fun vincula(produto: Produto) {
+                this.produto = produto
                 nome.text = produto.nome
                 descricao.text = produto.descricao
-                valor.text = formataParaMoedaBrasileira(produto.valor)
+                valor.text = produto.valor.formataParaMoedaBrasileira()
 
                 imageView.tentaCarregarImagem(produto.imagem)
             }
 
-            private fun formataParaMoedaBrasileira(valor: BigDecimal): String? {
-                val formatador = NumberFormat.getCurrencyInstance(Locale("pt", "br"))
-                val valorEmMoeda = formatador.format(valor)
-                return valorEmMoeda
-            }
+
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

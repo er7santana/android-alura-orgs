@@ -1,16 +1,13 @@
 package br.com.shaft.orgs.ui.activity
 
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import br.com.shaft.orgs.R
 import br.com.shaft.orgs.dao.ProdutosDao
 import br.com.shaft.orgs.databinding.ActivityFormularioProdutoBinding
-import br.com.shaft.orgs.databinding.FormularioImagemBinding
 import br.com.shaft.orgs.extensions.tentaCarregarImagem
 import br.com.shaft.orgs.model.Produto
-import coil3.load
-import coil3.request.placeholder
+import br.com.shaft.orgs.ui.dialog.FormularioImagemDialog
 import java.math.BigDecimal
 
 class FormularioProdutoActivity : AppCompatActivity(R.layout.activity_formulario_produto) {
@@ -28,26 +25,14 @@ class FormularioProdutoActivity : AppCompatActivity(R.layout.activity_formulario
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        title = "Cadastrar produto"
         setContentView(binding.root)
         configuraBotaoSalvar()
         binding.formularioProdutoImagem.setOnClickListener {
-
-            val bindingFormularioImagem = FormularioImagemBinding.inflate(layoutInflater)
-            bindingFormularioImagem.formularioImagemBotaoCarregar.setOnClickListener {
-                val url = bindingFormularioImagem.formluarioImagemUrl.text.toString()
-                bindingFormularioImagem.formularioImagemImageView.tentaCarregarImagem(url)
+            FormularioImagemDialog(this).mostra(url) { imagem ->
+                url = imagem
+                binding.formularioProdutoImagem.tentaCarregarImagem(url)
             }
-
-            AlertDialog.Builder(this)
-                .setView(bindingFormularioImagem.root)
-                .setPositiveButton("Confirmar", { _, _ ->
-                    url = bindingFormularioImagem.formluarioImagemUrl.text.toString()
-                    binding.formularioProdutoImagem.tentaCarregarImagem(url)
-                })
-                .setNegativeButton("Cancelar", { _, _ ->
-                    println("did tap on cancelar")
-                })
-                .show()
         }
     }
 
