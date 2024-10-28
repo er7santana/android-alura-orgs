@@ -21,7 +21,6 @@ class DetalhesProdutoActivity : AppCompatActivity(R.layout.activity_detalhes_pro
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val produto = intent.getParcelableExtra<Produto>("produto")
         title = "Detalhes de produto"
         setContentView(binding.root)
