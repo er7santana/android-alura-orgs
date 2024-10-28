@@ -15,6 +15,8 @@ import br.com.shaft.orgs.databinding.ActivityListaProdutosBinding
 import br.com.shaft.orgs.databinding.ProdutoItemBinding
 import br.com.shaft.orgs.model.Produto
 import coil3.load
+import coil3.request.error
+import coil3.request.fallback
 import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.Locale
@@ -82,10 +84,9 @@ class ListaProdutosActivity: AppCompatActivity(R.layout.activity_lista_produtos)
                 descricao.text = produto.descricao
                 valor.text = formataParaMoedaBrasileira(produto.valor)
 
-                if (produto.imagem != null) {
-                    imageView.load(produto.imagem)
-                } else {
-                    imageView.load(R.drawable.imagem_padrao)
+                imageView.load(produto.imagem) {
+                    error(R.drawable.erro)
+                    fallback(R.drawable.imagem_padrao)
                 }
             }
 
