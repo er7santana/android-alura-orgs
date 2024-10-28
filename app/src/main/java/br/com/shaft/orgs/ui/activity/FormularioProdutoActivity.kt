@@ -1,6 +1,7 @@
 package br.com.shaft.orgs.ui.activity
 
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import br.com.shaft.orgs.R
 import br.com.shaft.orgs.dao.ProdutosDao
@@ -21,8 +22,20 @@ class FormularioProdutoActivity : AppCompatActivity(R.layout.activity_formulario
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        configuraBotaoSalvar()
         setContentView(binding.root)
+        configuraBotaoSalvar()
+        binding.formularioProdutoImagem.setOnClickListener {
+
+            AlertDialog.Builder(this)
+                .setView(R.layout.formulario_imagem)
+                .setPositiveButton("Confirmar", { _, _ ->
+                    println("did tap on confirmar")
+                })
+                .setNegativeButton("Cancelar", { _, _ ->
+                    println("did tap on cancelar")
+                })
+                .show()
+        }
     }
 
     private fun configuraBotaoSalvar() {
